@@ -66,6 +66,21 @@ def autocomplete():
             ##### W2, L3, S1
             search_response = None
             print("TODO: implement autocomplete AND instant search")
+            query_obj = {
+                "suggest": {
+                    "autocomplete": {
+                        "prefix": prefix,
+                        "completion": {
+                            "field": "suggest",
+                            "skip_duplicates": "true"
+                        }
+                    }
+                }
+            }
+            opensearch = get_opensearch()
+            search_response = opensearch.search(
+                body=query_obj,
+                index="bbuy_queries" if type_ == "queries" else "bbuy_products")
             if (search_response and search_response['suggest']['autocomplete'] and search_response['suggest']['autocomplete'][0]['length'] > 0): # just a query response
                 results = search_response['suggest']['autocomplete'][0]['options']
     print(f"Results: {results}")
